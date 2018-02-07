@@ -1,0 +1,29 @@
+{
+    "compileOnSave": true,
+    "compilerOptions": {
+      "moduleResolution": "node",
+      "emitDecoratorMetadata": true,
+      "experimentalDecorators": true,
+      "target": "es6",
+      "sourceMap": true,
+      "declaration": false,
+      "outDir": "dist",
+      "jsx": "react",
+      "jsxFactory": "h",
+      "typeRoots": [
+        "node_modules/@types",
+      ],
+      "lib": [
+        "es2017",
+        "dom",
+      ]
+    },
+    "include": [
+      "src/**/*"
+    ],
+    "exclude": [
+      "src/**/*.test.ts",
+      "src/**/*.spec.ts",
+    ]
+  }
+  
