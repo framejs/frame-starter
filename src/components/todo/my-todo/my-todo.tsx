@@ -1,8 +1,5 @@
 import { CustomElement, Event, Property, Listen } from '@framejs/core';
-import { withLitHtml, html } from '@framejs/renderer-lit-html';
-
-import  '../todo-input/todo-input';
-import '../todo-item/todo-item';
+import { withPreact, h } from '@framejs/renderer-preact';
 
 interface TodoItem {
     text: string;
@@ -13,7 +10,7 @@ interface TodoItem {
     tag: 'my-todo',
     style: require('./my-todo.scss')
 })
-class MyTodo extends withLitHtml(HTMLElement) {
+export class MyTodo extends withPreact(HTMLElement) {
     @Property() _list: TodoItem[] = [
         { text: 'my initial todo', checked: false },
         { text: 'Learn about Web Components', checked: true }
@@ -38,21 +35,20 @@ class MyTodo extends withLitHtml(HTMLElement) {
     }
     
     render() {
-        return html`
-          <div>
-            <h1>Todos FrameJS</h1>
-            <section>
-              <todo-input></todo-input>
-              <ul id="list-container">
-                ${this._list.map((item, index) => (
-                  html`
-                    <todo-item
-                        checked=${item.checked}
-                        index=${index}>${item.text}</todo-item>`
-                ))}
-              </ul>
-            </section>
-          </div>
-        `;
-      }
+        return (
+            <div>
+                <h1>Todos Stencil</h1>
+                <section>
+                <todo-input></todo-input>
+                <ul id="list-container">
+                    {this._list.map((item, index) => (
+                    <todo-item checked={item.checked} index={index}>
+                        {item.text}
+                    </todo-item>
+                    ))}
+                </ul>
+                </section>
+            </div>
+        );
+    }
 }

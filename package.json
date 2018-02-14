@@ -4,7 +4,7 @@
   "scripts": {
     "start": "concurrently \"node_modules/webpack/bin/webpack.js\" \"node_modules/@frctl/fractal/bin/fractal start --sync\"",
     "build": "node_modules/webpack/bin/webpack.js --env.production && node_modules/@frctl/fractal/bin/fractal build",
-    "test": "jest"
+    "test": "jest --verbose"
   },
   "jest": {
     "testEnvironment": "@skatejs/ssr/jest",
@@ -25,10 +25,10 @@
     ]
   },
   "dependencies": {
-    "@framejs/core": "^0.0.1",
-    "@framejs/renderer-lit-html": "^0.0.2",
-    "@framejs/renderer-preact": "^0.0.1",
-    "preact": "^8.2.7"
+    "@framejs/core": "^0.0.5",
+    "@framejs/renderer-lit-html": "^0.1.4",
+    "@framejs/renderer-preact": "^0.0.5",
+    "compression-webpack-plugin": "^1.1.6"
   },
   "devDependencies": {
     "@skatejs/ssr": "^0.19.1",

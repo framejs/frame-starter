@@ -1,11 +1,11 @@
 import { CustomElement, Event, EventEmitter } from '@framejs/core';
-import { withLitHtml, html } from '@framejs/renderer-lit-html';
+import { withPreact, h } from '@framejs/renderer-preact';
 
 @CustomElement({
     tag: 'todo-input',
     style: require('./todo-input.scss')
 })
-export class TodoInput extends withLitHtml(HTMLElement) {
+export class TodoInput extends withPreact(HTMLElement) {
     public value: string = '';
     @Event() onTodoInputSubmit: EventEmitter;
 
@@ -19,16 +19,16 @@ export class TodoInput extends withLitHtml(HTMLElement) {
     
     handleInputChange = (event) => this.value = event.target.value;
 
-    render(): any {
-        return html`
-            <form on-submit=${(e) => this.handleOnSubmit(e)}>
+    render() {
+        return (
+            <form onSubmit={this.handleOnSubmit}>
                 <input
-                    value=${this.value}
-                    type="text"
-                    placeholder="What needs to be done?"
-                    on-input=${(e) => this.handleInputChange(e)}
+                value={this.value}
+                type="text"
+                placeholder="What needs to be done?"
+                onInput={this.handleInputChange}
                 />
             </form>
-        `;
+        );
     }
 }

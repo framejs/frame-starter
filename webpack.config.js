@@ -4,19 +4,22 @@ const CleanWebpackPlugin = require("clean-webpack-plugin");
 const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
 const Visualizer = require("webpack-visualizer-plugin");
 const glob = require("glob");
+const CompressionPlugin = require("compression-webpack-plugin");
 
 module.exports = env => {
   const options = Object.assign({}, env);
-  const paths = glob.sync("./src/components/**/!(*.spec|*.test)*.+(ts|tsx)");
+  const root = 'src';
+  const paths = glob.sync(`./${root}/**/!(*.spec|*.test|*.d)*.+(ts|tsx)`);
 
   const entries = () => {
     let obj = {};
     
     for (var i = 0; i < paths.length; ++i) {
-      const name = path.parse(paths[i]).name;
-      obj[name] = paths[i];
+      const parsedPath = path.parse(paths[i])
+      const name = parsedPath.name;
+      obj[path.join(parsedPath.dir.split(root)[1], name)] = paths[i];
     }
-  
+    
     return obj;
   };
 
@@ -64,13 +67,20 @@ module.exports = env => {
           compress: options.production ? true : false
         }
       }),
-      new Visualizer({
-        filename: "./dist/stats.html"
-      })
+      // new CompressionPlugin({
+      //   asset: "[path].gz[query]",
+      //   algorithm: "gzip",
+      //   test: /\.js$|\.css$/,
+      //   threshold: 10240,
+      //   minRatio: 0.8
+      // }),
+      // new Visualizer({
+      //   filename: "./dist/stats.html"
+      // })
     ]
   };
 
-  const umdConfig = Object.assign({}, base, {
+  const umdProdConfig = Object.assign({}, base, {
     entry: entries,
     output: {
       filename: "./dist/bundles/[name].umd.js",
@@ -78,12 +88,31 @@ module.exports = env => {
     }
   });
 
-  const bundleConfig = Object.assign({}, base, {
+  const bundleProdConfig = Object.assign({}, base, {
     entry: entries,
     output: {
       filename: "./dist/es2015/[name].js"
     }
   });
 
-  return [umdConfig, bundleConfig];
+  const umdConfig = Object.assign({}, base, {
+    entry: './src/index.tsx',
+    output: {
+      filename: "./dist/bundles/index.umd.js",
+      libraryTarget: "umd"
+    }
+  });
+
+  const bundleConfig = Object.assign({}, base, {
+    entry: './src/index.tsx',
+    output: {
+      filename: "./dist/es2015/index.js"
+    }
+  });
+
+  if (!options.production) {
+    return [umdConfig, bundleConfig];
+  } else {
+    return [umdProdConfig, bundleProdConfig];
+  }
 };
