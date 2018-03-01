@@ -6,22 +6,35 @@ const Visualizer = require("webpack-visualizer-plugin");
 const glob = require("glob");
 const CompressionPlugin = require("compression-webpack-plugin");
 
+const getEntries = (root, src) => {
+  let obj = {};
+    
+    for (var i = 0; i < src.length; ++i) {
+      const parsedPath = path.parse(src[i])
+      const name = parsedPath.name;
+      obj[path.join(parsedPath.dir.split(root)[1], name)] = src[i];
+    }
+    
+    return obj;
+}
+
 module.exports = env => {
   const options = Object.assign({}, env);
   const root = 'src';
   const paths = glob.sync(`./${root}/**/!(*.spec|*.test|*.d)*.+(ts|tsx)`);
+  const testPaths = glob.sync(`./${root}/**/!(*.d)*.+(spec|test)*.+(ts|tsx)`);
 
-  const entries = () => {
-    let obj = {};
+  // const entries = () => {
+  //   let obj = {};
     
-    for (var i = 0; i < paths.length; ++i) {
-      const parsedPath = path.parse(paths[i])
-      const name = parsedPath.name;
-      obj[path.join(parsedPath.dir.split(root)[1], name)] = paths[i];
-    }
+  //   for (var i = 0; i < paths.length; ++i) {
+  //     const parsedPath = path.parse(paths[i])
+  //     const name = parsedPath.name;
+  //     obj[path.join(parsedPath.dir.split(root)[1], name)] = paths[i];
+  //   }
     
-    return obj;
-  };
+  //   return obj;
+  // };
 
   const base = {
     watch: !options.production,
@@ -81,7 +94,7 @@ module.exports = env => {
   };
 
   const umdProdConfig = Object.assign({}, base, {
-    entry: entries,
+    entry: getEntries(root, paths),
     output: {
       filename: "./dist/bundles/[name].umd.js",
       libraryTarget: "umd"
@@ -89,7 +102,7 @@ module.exports = env => {
   });
 
   const bundleProdConfig = Object.assign({}, base, {
-    entry: entries,
+    entry: getEntries(root, paths),
     output: {
       filename: "./dist/es2015/[name].js"
     }
@@ -110,9 +123,16 @@ module.exports = env => {
     }
   });
 
+  const testConfig = Object.assign({}, base, {
+    entry: getEntries(root, testPaths),
+    output: {
+        filename: './dist/tests/[name].js'
+    }
+});
+
   if (!options.production) {
-    return [umdConfig, bundleConfig];
+    return [umdConfig, bundleConfig, testConfig];
   } else {
-    return [umdProdConfig, bundleProdConfig];
+    return [umdProdConfig, bundleProdConfig, testConfig];
   }
 };
