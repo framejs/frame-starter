@@ -22,6 +22,25 @@ Build for production and generate static documentation:
 $ npm run build
 ```
 
+## Writing unit and e2e tests
+
+This starter-kit comes with Karma test runner for testing components.
+Webpack is preconfigured to compile all test files called `[file].spec.(ts|tsx)` in the `/src` directory, and Karma is configured to load all test files and the compiled `src/index.tsx`.
+
+To run all tests:
+
+```sh
+$ npm test
+```
+
+To run all tests and run on every test file change:
+
+```sh
+$ npm run test:watch
+```
+
+Settings for Karma can be configured in `karma.conf.js`
+
 Enjoy!
 
 
