@@ -24,18 +24,6 @@ module.exports = env => {
   const paths = glob.sync(`./${root}/**/!(*.spec|*.test|*.d)*.+(ts|tsx)`);
   const testPaths = glob.sync(`./${root}/**/!(*.d)*.+(spec|test)*.+(ts|tsx)`);
 
-  // const entries = () => {
-  //   let obj = {};
-    
-  //   for (var i = 0; i < paths.length; ++i) {
-  //     const parsedPath = path.parse(paths[i])
-  //     const name = parsedPath.name;
-  //     obj[path.join(parsedPath.dir.split(root)[1], name)] = paths[i];
-  //   }
-    
-  //   return obj;
-  // };
-
   const base = {
     watch: !options.production,
     stats: "normal",
